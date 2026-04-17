@@ -4,7 +4,7 @@
   // Prevent running multiple time at a time
   if (window.__phishGuardRan) return;
   window.__phishGuardRan = true;
-  //
+
 
   //collect dom things
   function collectDOMSignals() {
@@ -12,10 +12,8 @@
 
     // check Password inputs
     const passwordInputs = document.querySelectorAll('input[type="password"]');
-
     //check Hidden inputs
     const hiddenInputs = document.querySelectorAll('input[type="hidden"]');
-
     //check Sensitive-data inputs (email, tel, text fields with sensitive names)
     const sensitiveNames =
       /user|email|mail|phone|mobile|card|credit|debit|cvv|pin|ssn|dob|birth/i;
