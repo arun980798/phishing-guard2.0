@@ -1,15 +1,13 @@
-// ============================================================
 // background.js — PhishGuard Service Worker
 // Responsibilities:
 //   • Receive DOM signals from content.js
 //   • Run heuristic scoring (via utils.js)
 //   • Manage blacklist & whitelist in chrome.storage.local
 //   • Block phishing pages by redirecting to warning.html
-// ============================================================
 
 importScripts("utils.js"); // brings in analyzeSignals()
 
-// ─── Storage helpers ──────────────────────────────────────
+// ─── Storage helpers
 async function getList(key) {
   return new Promise(resolve => {
     chrome.storage.local.get([key], result => {
@@ -72,10 +70,10 @@ async function removeFromBlacklist(host) {
 const tabScoreCache = {}; // tabId → { score, verdict, reasons, url }
 
 // ─── Message handler ─────────────────────────────────────
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {//Whenever any part of extension sends a message → handle it here
 
   // --- Content script sends DOM signals ---
-  if (msg.type === "ANALYZE_PAGE") {
+  if (msg.type === "ANALYZE_PAGE") {//run when website is open 
     (async () => {
       const url = msg.url;
       const host = getHost(url);
@@ -117,7 +115,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         blockTab(sender.tab?.id, url, result.score, result.reasons);
       }
 
-      sendResponse(result);
+      sendResponse(result); //sand response back to content.js which will show the popup 
     })();
 
     return true; // keep channel open for async response
@@ -185,7 +183,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-// ─── Block a tab by redirecting to warning page ───────────
+
+
+
+
+
+//  Block a tab by redirecting to warning page 
 function blockTab(tabId, originalURL, score, reasons) {
   if (!tabId) return;
 
@@ -197,8 +200,7 @@ function blockTab(tabId, originalURL, score, reasons) {
   chrome.tabs.update(tabId, { url: warningURL });
 }
 
-// ─── On navigation: check blacklist immediately ───────────
-// (catches direct navigations before content.js fires)
+//Auto Block on Navigation
 chrome.webNavigation.onCommitted.addListener(async (details) => {
   if (details.frameId !== 0) return; // main frame only
   const url = details.url;

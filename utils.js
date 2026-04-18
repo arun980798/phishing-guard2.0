@@ -9,16 +9,22 @@
  * Accepts a plain object of URL + DOM signals and returns
  *   { score: 0-100, reasons: string[], verdict: 'safe'|'suspicious'|'phishing' }
  */
-function analyzeSignals(signals) {
+function analyzeSignals(signals) { //this is use to give score resasion or safe or not 
   let score = 0;
   const reasons = [];
 
-  // ---------- URL-based checks ----------
+  //URL-based checks 
   const urlResult = scoreURL(signals.url || "");
   score += urlResult.score;
   reasons.push(...urlResult.reasons);
 
-  // ---------- DOM-based checks ----------
+
+
+
+
+
+
+  // -DOM-based checks 
   if (signals.dom) {
     const domResult = scoreDOM(signals.dom);
     score += domResult.score;
@@ -38,7 +44,7 @@ function analyzeSignals(signals) {
 // ─────────────────────────────────────────────
 //  URL Heuristics
 // ─────────────────────────────────────────────
-function scoreURL(rawURL) {
+function scoreURL(rawURL) {//check the url and give score and reason for that score
   let score = 0;
   const reasons = [];
 
@@ -148,7 +154,7 @@ function scoreURL(rawURL) {
     reasons.push(`Non-standard port in URL: ${url.port}`);
   }
 
-  // 10. Hex / percent-encoded characters (obfuscation)
+  // 10. encoded url
   const encodedChars = (full.match(/%[0-9a-fA-F]{2}/g) || []).length;
   if (encodedChars > 5) {
     score += 12;
@@ -164,9 +170,11 @@ function scoreURL(rawURL) {
   return { score, reasons };
 }
 
-// ─────────────────────────────────────────────
+
+
+
+
 //  DOM Heuristics
-// ─────────────────────────────────────────────
 function scoreDOM(dom) {
   let score = 0;
   const reasons = [];
@@ -232,3 +240,4 @@ function scoreDOM(dom) {
 if (typeof module !== "undefined") {
   module.exports = { analyzeSignals, scoreURL, scoreDOM };
 }
+//export this to other file like background.js and content.js to use this function 
