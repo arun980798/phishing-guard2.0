@@ -4,8 +4,9 @@
 // ============================================================
 
 "use strict";
+ 
 
-// ── DOM refs ────────────────────────────────────────────────
+//things of html element we need to change when we get score and reason from background.js
 const ringProgress  = document.getElementById("ringProgress");
 const scoreNum      = document.getElementById("scoreNum");
 const verdictBadge  = document.getElementById("verdictBadge");
@@ -20,9 +21,9 @@ const tabBlacklist  = document.getElementById("tabBlacklist");
 const tabWhitelist  = document.getElementById("tabWhitelist");
 const listItems     = document.getElementById("listItems");
 const toast         = document.getElementById("toast");
-
-// Ring circumference (r=30 → C = 2πr ≈ 188.5)
 const CIRCUMFERENCE = 2 * Math.PI * 30;
+// Ring circumference (r=30 → C = 2πr ≈ 188.5)
+
 
 let currentHost = "";
 let activeListTab = "blacklist";
@@ -34,7 +35,7 @@ function showToast(msg, duration = 1600) {
   setTimeout(() => toast.classList.remove("show"), duration);
 }
 
-// ── Utility: set ring progress ───────────────────────────────
+//ui ring score 
 function setRing(score, verdict) {
   const offset = CIRCUMFERENCE - (score / 100) * CIRCUMFERENCE;
   ringProgress.style.strokeDashoffset = offset;
@@ -47,7 +48,7 @@ function setRing(score, verdict) {
   ringProgress.style.stroke = colorMap[verdict] || "#22c55e";
 }
 
-// ── Render score + verdict ───────────────────────────────────
+// ── Render score + verdict 
 function renderScore(score, verdict, reasons, url, blacklisted, whitelisted) {
   // Ring
   setRing(score, verdict);
@@ -98,9 +99,9 @@ function renderScore(score, verdict, reasons, url, blacklisted, whitelisted) {
 
 function escapeHTML(str) {
   return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
+}//somthing about secuirty dont know about it 
 
-// ── Render list ──────────────────────────────────────────────
+// ── Render list of blacklisted or whitelisted sites
 function renderList(data) {
   const items = data[activeListTab] || [];
   if (items.length === 0) {
@@ -135,7 +136,7 @@ function renderList(data) {
   });
 }
 
-// ── Send a message to background ────────────────────────────
+// ── Send a message to background 
 function sendMsg(type, extra = {}) {
   return new Promise(resolve => {
     chrome.runtime.sendMessage({ type, ...extra }, resolve);
@@ -148,7 +149,7 @@ async function refreshLists() {
   renderList(data);
 }
 
-// ── Bootstrap ────────────────────────────────────────────────
+// ── Bootstrap this function Initialization whenpopup open 
 async function init() {
   const info = await sendMsg("GET_TAB_SCORE");
 
@@ -242,3 +243,24 @@ tabWhitelist.addEventListener("click", () => {
 
 // ── Run ──────────────────────────────────────────────────────
 init();
+
+
+
+// User opens popup
+//        ↓
+// popup.js → asks background.js
+//        ↓
+// Gets score + data
+//        ↓
+// Displays:
+//    ✔ Score
+//    ✔ Verdict
+//    ✔ Reasons
+//        ↓
+// User clicks buttons
+//        ↓
+// Message sent to background.js
+//        ↓
+// Storage updated
+//        ↓
+// UI refreshed
