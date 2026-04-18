@@ -121,6 +121,33 @@ Click the PhishGuard icon in the toolbar to see:
 
 This extension implements:
 
+
+
+
+
+🔥 Phishing Detection Bases
+🧠 1. URL-Based Checks
+IP address used instead of domain
+Long URL length
+Presence of “@” symbol
+Excessive hyphens in domain
+Too many subdomains (dots)
+Suspicious keywords in URL
+Brand name mismatch (spoofing)
+Double slashes in URL
+Non-standard port usage
+Encoded/obfuscated characters
+Use of HTTP instead of HTTPS
+🌐 2. DOM-Based Checks
+Presence of password field
+High number of hidden inputs
+Form submitting to external domain
+Multiple sensitive input fields
+Suspicious or urgent text content
+Missing favicon
+Disabled right-click
+Use of iFrames
+
 - **Heuristic analysis**: Rule-based scoring without ML
 - **DOM analysis**: Structural page analysis at runtime
 - **Dynamic blacklisting**: Storage-backed, grows from detections
